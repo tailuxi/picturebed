@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // 使用FormSubmit.co服务发送邮件
-        fetch("https://formsubmit.co/ajax/你的邮箱地址@gmail.com", {
+        fetch("https://formsubmit.co/ajax/1354854193@qq.com", {
             method: "POST",
             body: formData
         })
