@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft服务器举报系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Minecraft&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --danger: #F44336;
+            --dark: #333;
+            --light: #f5f5f5;
+            --gray: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url('https://www.minecraft.net/content/dam/minecraft/touchup-2020/minecraft-background-behavior.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            border: 2px solid var(--primary);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: 'Minecraft', sans-serif;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .label-optional {
+            color: #666;
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .file-input {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background-color: var(--light);
+            border: 2px dashed var(--gray);
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background-color: var(--gray);
+            border-color: var(--primary);
+        }
+        
+        .file-name {
+            margin-top: 5px;
+            font-size: 14px;
+            color: var(--dark);
+        }
+        
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--primary-dark);
+            border: 1px solid var(--primary);
+            display: block;
+        }
+        
+        .error {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            display: block;
+        }
+        
+        .loading {
+            background-color: rgba(33, 150, 243, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            display: block;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .privacy-note {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minecraft服务器举报系统</h1>
+        
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="playerName">被举报玩家名称:</label>
+                <input type="text" id="playerName" placeholder="输入被举报玩家的游戏ID" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="reporterName">你的游戏名称:</label>
+                <input type="text" id="reporterName" placeholder="输入你的游戏ID" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="reporterEmail">你的邮箱地址: <span class="label-optional">(可选，用于接收处理结果)</span></label>
+                <input type="email" id="reporterEmail" placeholder="输入你的邮箱地址">
+                <p class="privacy-note"><i class="fas fa-lock"></i> 你的邮箱仅用于反馈举报处理结果，不会被用于其他用途</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">举报原因:</label>
+                <select id="reason" required>
+                    <option value="">-- 请选择举报原因 --</option>
+                    <option value="作弊/外挂">作弊/外挂</option>
+                    <option value="言语辱骂">言语辱骂</option>
+                    <option value="破坏建筑">破坏建筑</option>
+                    <option value="偷窃物品">偷窃物品</option>
+                    <option value="恶意PK">恶意PK</option>
+                    <option value="其他违规">其他违规</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">详细描述:</label>
+                <textarea id="description" placeholder="请详细描述违规行为发生的时间、地点和具体情况..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>上传截图证据:</label>
+                <div class="file-input">
+                    <label class="file-input-label" for="screenshot">
+                        <i class="fas fa-cloud-upload-alt"></i> 点击或拖拽文件到此处上传
+                        <div class="file-name" id="fileName">未选择文件</div>
+                    </label>
+                    <input type="file" id="screenshot" accept="image/*">
+                </div>
+                <small>支持JPG, PNG格式，最大5MB</small>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <span id="btnText">提交举报</span>
+                <span id="btnLoader" style="display:none;"><i class="fas fa-spinner fa-spin"></i> 处理中...</span>
+            </button>
+        </form>
+        
+        <div id="message"></div>
+        
+        <div class="footer">
+            <p>© 2023 Minecraft服务器管理团队 | 所有举报将会被认真审核</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
